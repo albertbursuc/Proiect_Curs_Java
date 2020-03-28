@@ -1,12 +1,14 @@
-package sci.travel_app.WalkTheBear.model.Entities;
+package sci.travel_app.WalkTheBear.model.entities;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import sci.travel_app.WalkTheBear.model.misc.Category;
+import sci.travel_app.WalkTheBear.model.misc.SubCategory;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Entity
 @Table(name = "PLACE")
-@DiscriminatorColumn(name = "CATEGORY")
 public class Place {
     @Id
     @Column(name = "PLACE_ID")
@@ -26,11 +28,20 @@ public class Place {
     private String phoneNumber;
     @Column(name = "EMAIL", nullable = false)
     private String email;
+    @Column(name = "CATEGORY", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Category category;
+    @Column(name = "SUBCATEGORY", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private SubCategory subcategory;
+    @Column(name = "WORK_HOURS")
+    private String workingHours;
     @Column(name = "DESCRIPTION", nullable = false)
     private String description;
     //Place mainPic;
     //Place galleryPic;
     @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     @Column(name = "date_created")
     private Date created;
     @OneToOne
@@ -41,16 +52,31 @@ public class Place {
 
     }
 
-    public Place(String name, String city, String county, String address, String phoneNumber, String email, String description,AppUser user ) {
+
+    public Place(String name, String county, String city, String address, String phoneNumber, String email, Category category, SubCategory subcategory, String description, Date created, AppUser user) {
         this.name = name;
-        this.city = city;
         this.county = county;
+        this.city = city;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.category = category;
+        this.subcategory = subcategory;
         this.description = description;
         this.created = new Date();
-        this.user = getUser();
+        this.user = user;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setSubcategory(SubCategory subcategory) {
+        this.subcategory = subcategory;
     }
 
     public long getId() {
@@ -81,7 +107,7 @@ public class Place {
         this.address = address;
     }
 
-    public String getCoordinates() {
+       public String getCoordinates() {
         return coordinates;
     }
     public void setCoordinates(String coordinates) {
@@ -100,6 +126,13 @@ public class Place {
     }
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getWorkingHours() {
+        return workingHours;
+    }
+    public void setWorkingHours(String workingHours) {
+        this.workingHours = workingHours;
     }
 
     public String getDescription() {
@@ -123,4 +156,11 @@ public class Place {
         this.user = user;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
